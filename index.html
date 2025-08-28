@@ -24,6 +24,7 @@
         <a href="#" id="goHomeGlobal" class="px-4 py-2 rounded-xl border font-bold italic">Ana sayfaya git</a>
         <button id="continueShoppingGlobal" class="px-4 py-2 rounded-xl bg-fuchsia-600 text-white font-bold italic">Alışverişe devam et</button>
         <a id="contactSellerGlobal" target="_blank" class="px-4 py-2 rounded-xl border font-bold italic">Satıcıyla iletişime geç</a>
+        <button id="openImgImport" class="px-4 py-2 rounded-xl border font-bold italic">Görselleri Ekle</button>
       </div>
     </div>
   </header>
@@ -133,6 +134,24 @@
     </div>
   </div>
 
+  <!-- Görsel Toplu Ekle Modal -->
+  <div id="imgModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-2xl w-full max-w-3xl card overflow-hidden">
+      <div class="flex items-center gap-2 p-4 border-b">
+        <h3 class="text-lg font-bold">Görsel URL Toplu Ekle</h3>
+        <button id="imgClose" class="ml-auto text-slate-500 hover:text-slate-900">✖</button>
+      </div>
+      <div class="p-4 space-y-3">
+        <p class="text-sm text-slate-600">Her satıra <strong>kod, görselURL</strong> yaz (virgül ile). Örn: <code>BY001, https://.../yuzuk.jpg</code></p>
+        <textarea id="imgText" rows="10" class="w-full border rounded p-2 font-mono" placeholder="code, https://..."></textarea>
+        <div class="flex gap-2">
+          <button id="imgApply" class="px-4 py-2 rounded-xl bg-emerald-600 text-white">Kaydet</button>
+          <button id="imgClear" class="px-4 py-2 rounded-xl border">Hepsini Sil</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- EFT Ödeme (IBAN) Sayfası -->
   <div id="paymentPage" class="fixed inset-0 bg-white hidden z-40 overflow-y-auto">
     <div class="max-w-3xl mx-auto p-6">
@@ -174,20 +193,22 @@
     const PRODUCTS = [
       { title:'İnce Zincir Kolye', code:'BY002', price:699, discount:459, stock:15, img:'', desc:'Zarif yapıda, günlük kullanım için hafif zincir kolye. Malzeme: paslanmaz çelik.' },
       { title:'Minimal Gümüş Yüzük', code:'BY001', price:499, discount:349, stock:10, img:'', desc:'925 ayar gümüş, mat yüzeyli minimal tasarım. Hediye kutulu.' },
-      // { title:'...', code:'...', price:0, discount:0, stock:0, img:'https://...', desc:'Ürün açıklaması...' },
+      // IKAS JSON/CSV içeriğini buraya yapıştırabilirsin (img boş kalabilir). Aşağıdaki IMG_MAP ile toplu ekleyebilirsin.
     ];
 
     // === STORAGE KEYS ===
     const LS_REVIEWS='bytaki_reviews';
     const LS_PURCHASED='bytaki_purchased';
     const LS_CART='bytaki_cart';
-    const LS_STOCK_OVR='bytaki_stock_overrides'; // kodla yönetimi bozmaz; sadece stok güncellemesi kalıcı olur
+    const LS_STOCK_OVR='bytaki_stock_overrides';
+    const LS_IMG_MAP='bytaki_img_map'; // kodla yönetimi bozmaz; sadece stok güncellemesi kalıcı olur
 
     // === STATE ===
     let reviews  = JSON.parse(localStorage.getItem(LS_REVIEWS) || '{}');
     let purchased= JSON.parse(localStorage.getItem(LS_PURCHASED) || '[]'); // tamamlanan siparişlerdeki ürün kodları
     let cart     = JSON.parse(localStorage.getItem(LS_CART) || '[]'); // [{code, qty}]
-    let stockOv  = JSON.parse(localStorage.getItem(LS_STOCK_OVR) || '{}'); // {code: stok}
+    let stockOv  = JSON.parse(localStorage.getItem(LS_STOCK_OVR) || '{}');
+    let IMG_MAP  = JSON.parse(localStorage.getItem(LS_IMG_MAP) || '{}'); // {code: imgUrl} // {code: stok}
     let customer = {name:'', phone:'', address:''};
     let lastOrder = null; // {code, items:[{title,code,qty,price}], total}
 
@@ -223,10 +244,11 @@
       $('#productGrid').innerHTML = PRODUCTS.map(p=>{
         const curStock = getStock(p);
         const out = curStock <= 0;
+        const imgUrl = (p.img && p.img.trim()) || IMG_MAP[p.code] || "https://images.unsplash.com/photo-1613339027986-b94d85708949?w=800&auto=format&fit=crop";
         return `
         <article class='card bg-white p-4 rounded-2xl border ${out?"opacity-60":""}'>
           <div class='cursor-pointer openDetail' data-code='${p.code}'>
-            <img src='${p.img||"https://images.unsplash.com/photo-1613339027986-b94d85708949?w=800&auto=format&fit=crop"}' class='w-full h-48 object-cover rounded mb-3' alt='${p.title}'>
+            <img src='${imgUrl}' class='w-full h-48 object-cover rounded mb-3' alt='${p.title}'>
             <h3 class='font-bold'>${p.title}</h3>
           </div>
           <p class='text-xs text-slate-500'>Kod: ${p.code}</p>
@@ -375,7 +397,8 @@
     function openDetail(code){
       const p = PRODUCTS.find(x=>x.code===code); if(!p) return;
       document.getElementById('detailTitle').textContent = p.title;
-      document.getElementById('detailImg').src = p.img || 'https://images.unsplash.com/photo-1613339027986-b94d85708949?w=800&auto=format&fit=crop';
+      const dImg = (p.img && p.img.trim()) || IMG_MAP[p.code] || 'https://images.unsplash.com/photo-1613339027986-b94d85708949?w=800&auto=format&fit=crop';
+      document.getElementById('detailImg').src = dImg;
       document.getElementById('detailImg').alt = p.title;
       document.getElementById('detailCode').textContent = p.code;
       document.getElementById('detailDisc').textContent = fmt(p.discount);
@@ -398,6 +421,26 @@
     document.getElementById('goHome2').onclick = (e)=>{ e.preventDefault(); closeCheckout(); window.scrollTo({top:0,behavior:'smooth'}); };
     document.getElementById('contactSellerMain').href = `https://wa.me/${waNum}`;
     document.getElementById('contactSellerStep3').href = `https://wa.me/${waNum}`;
+
+    // Görsel modal kontrol
+    document.getElementById('openImgImport').onclick = ()=>{ const m=document.getElementById('imgModal'); m.classList.remove('hidden'); m.classList.add('flex'); };
+    document.getElementById('imgClose').onclick = ()=>{ const m=document.getElementById('imgModal'); m.classList.add('hidden'); m.classList.remove('flex'); };
+    document.getElementById('imgApply').onclick = ()=>{
+      const txt = document.getElementById('imgText').value.split('
+');
+      let count=0;
+      txt.forEach(line=>{
+        if(!line.trim()) return;
+        const parts = line.split(',');
+        const code = (parts[0]||'').trim();
+        const url = (parts.slice(1).join(',')||'').trim();
+        if(code && url){ IMG_MAP[code]=url; count++; }
+      });
+      localStorage.setItem(LS_IMG_MAP, JSON.stringify(IMG_MAP));
+      renderProducts();
+      alert(count + ' görsel kaydedildi');
+    };
+    document.getElementById('imgClear').onclick = ()=>{ if(!confirm('Tüm görsel eşleştirmeleri silinsin mi?')) return; IMG_MAP={}; localStorage.setItem(LS_IMG_MAP,'{}'); renderProducts(); };
 
     // İlk render
     renderProducts();
