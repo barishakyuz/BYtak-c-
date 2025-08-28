@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>BYtakı | E‑Ticaret (Kodla Yönetim)</title>
+  <title>BYtakı | E-Ticaret (Kodla Yönetim)</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     .card{box-shadow:0 8px 30px rgba(0,0,0,0.06)}
@@ -11,11 +11,14 @@
   </style>
 </head>
 <body class="bg-slate-50 text-slate-800">
+  <!-- HEADER -->
   <header class="bg-white border-b sticky top-0 z-50">
     <div class="max-w-7xl mx-auto p-4 flex items-center gap-3">
       <h1 class="text-2xl font-extrabold">BY<span class="text-fuchsia-600">takı</span></h1>
       <div class="ml-auto flex items-center gap-2">
-        <button id="cartBtn" class="relative px-3 py-2 rounded-xl border">🛍️ Sepet <span id="cartCount" class="absolute -top-2 -right-2 text-xs bg-fuchsia-600 text-white rounded-full px-1">0</span></button>
+        <button id="cartBtn" class="relative px-3 py-2 rounded-xl border">🛍️ Sepet
+          <span id="cartCount" class="absolute -top-2 -right-2 text-xs bg-fuchsia-600 text-white rounded-full px-1">0</span>
+        </button>
       </div>
     </div>
     <!-- Global nav buttons -->
@@ -29,30 +32,25 @@
     </div>
   </header>
 
+  <!-- ANA İÇERİK -->
   <main class="max-w-7xl mx-auto p-6">
     <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-    <div class="mt-6 flex gap-2">
-      <a href="#" id="goHome" class="px-4 py-2 rounded-xl border">Ana sayfaya git</a>
-      <button id="continueShopping" class="px-4 py-2 rounded-xl bg-fuchsia-600 text-white">Alışverişe devam et</button>
-      <a id="contactSellerMain" target="_blank" class="px-4 py-2 rounded-xl border">Satıcıyla iletişime geç</a>
-    </div>
   </main>
 
-  <!-- Sepet & Checkout (tam ekran) -->
+  <!-- SEPET & CHECKOUT -->
   <div id="checkoutView" class="fixed inset-0 bg-white hidden z-40 overflow-y-auto">
     <div class="max-w-4xl mx-auto p-6">
       <div class="flex items-center gap-2 mb-6">
         <h3 class="text-2xl font-bold">Satın Alma</h3>
         <button id="closeCheckout" class="ml-auto px-3 py-2 border rounded">Kapat</button>
       </div>
-      <!-- Steps -->
       <div class="grid grid-cols-3 gap-2 mb-6">
         <div id="s1" class="step text-center py-2 rounded-xl border">1) Sepet</div>
         <div id="s2" class="step text-center py-2 rounded-xl border">2) Bilgiler</div>
         <div id="s3" class="step text-center py-2 rounded-xl border">3) Ödeme</div>
       </div>
 
-      <!-- Step 1: Sepet -->
+      <!-- Adım 1 -->
       <section id="step1" class="space-y-3">
         <div id="cartItems" class="space-y-3"></div>
         <div class="flex items-center justify-between border-t pt-4">
@@ -61,7 +59,7 @@
         </div>
       </section>
 
-      <!-- Step 2: Bilgiler -->
+      <!-- Adım 2 -->
       <section id="step2" class="hidden">
         <form id="infoForm" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <input name="name" placeholder="Ad Soyad" class="border p-2 rounded" required>
@@ -74,7 +72,7 @@
         </div>
       </section>
 
-      <!-- Step 3: Ödeme Seçenekleri -->
+      <!-- Adım 3 -->
       <section id="step3" class="hidden">
         <div class="card border rounded-2xl p-4 mb-4">
           <h4 class="font-semibold mb-2">EFT / Havale</h4>
@@ -96,7 +94,7 @@
     </div>
   </div>
 
-  <!-- Ürün Detay Modal -->
+  <!-- ÜRÜN DETAY MODAL -->
   <div id="detailModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
     <div class="bg-white rounded-2xl w-full max-w-3xl card overflow-hidden">
       <div class="flex items-center gap-2 p-4 border-b">
@@ -111,7 +109,7 @@
             <span id="detailDisc" class="text-2xl font-extrabold text-fuchsia-700"></span>
             <span id="detailPrice" class="text-sm line-through text-slate-400"></span>
           </div>
-          <p id="detailDesc" class="mt-3 text-sm leading-6"></p>
+
           <div class="mt-6">
             <h4 class="font-semibold mb-2">Ürün Bilgisi</h4>
             <div id="detailInfo" class="space-y-3 text-sm">
@@ -134,7 +132,7 @@
     </div>
   </div>
 
-  <!-- Görsel Toplu Ekle Modal -->
+  <!-- GÖRSEL TOPLU EKLE MODAL -->
   <div id="imgModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
     <div class="bg-white rounded-2xl w-full max-w-3xl card overflow-hidden">
       <div class="flex items-center gap-2 p-4 border-b">
@@ -152,7 +150,7 @@
     </div>
   </div>
 
-  <!-- EFT Ödeme (IBAN) Sayfası -->
+  <!-- EFT / IBAN SAYFASI -->
   <div id="paymentPage" class="fixed inset-0 bg-white hidden z-40 overflow-y-auto">
     <div class="max-w-3xl mx-auto p-6">
       <div class="flex items-center gap-2 mb-4">
@@ -173,6 +171,7 @@
     </div>
   </div>
 
+  <!-- FOOTER -->
   <footer class="mt-10 border-t">
     <div class="max-w-7xl mx-auto p-4 text-sm">
       WhatsApp: <a id="waFooter" class="underline" target="_blank"></a>
@@ -182,58 +181,39 @@
 
   <script>
     // === AYARLAR ===
-    const SELLER_WHATSAPP = '+905303042950'; // wa.me için uluslararası format
-    const SELLER_IBAN = 'TR00 0000 0000 0000 0000 0000 00'; // IBANINIZI girin
-    const SELLER_IBAN_NAME = 'BYtakı'; // hesap adı
-    const SELLER_BANK = 'Banka Adı'; // banka adı
-
-    // === KODLA YÖNETİM (BURAYI DÜZENLE) ===
-    // Ürünleri ekle/çıkar: Aşağıdaki PRODUCTS dizisini düzenle. Alanlar: title, code, price, discount, stock, img
-    // IKAS'tan dönüştürdüğüm JSON/CSV'yi buraya yapıştırabilirsin.
-    const PRODUCTS = [
-  { title:`Cadena Göz Ataç Zincir Kombin Altın Renk Çelik Bileklik`, code:`1649133321.0`, price:220, discount:150, stock:1, img:``, desc:`Cadena Göz Ataç Zincir Kombin Altın Renk Çelik Bileklik` },
-  { title:`Iç Içe Geçmeli Arnavut Asansör Unisex Gümüş Renk Çelik Bileklik`, code:`1649132804.0`, price:125, discount:75, stock:2, img:``, desc:`Iç Içe Geçmeli Arnavut Asansör Unisex Gümüş Renk Çelik Bileklik` },
-  { title:`Kılçık Unisex Çelik Bileklik`, code:`1649133368.0`, price:100, discount:70, stock:4, img:``, desc:`Kılçık Unisex Çelik Bileklik` },
-  { title:`Kılçık Unisex Çelik Bileklik`, code:`15011649133369.0`, price:100, discount:70, stock:1, img:``, desc:`Kılçık Unisex Çelik Bileklik` },
-  { title:`Yılan kolye bileklik seti`, code:`164913249.0`, price:200, discount:150, stock:5, img:``, desc:`Yılan kolye bileklik seti` },
-  { title:`Kaplan Çelik Bileklik`, code:`15011649132631.0`, price:200, discount:150, stock:2, img:``, desc:`Kaplan Çelik Bileklik` },
-  { title:`Kaplan Çelik Bileklik`, code:`15011649132630.0`, price:200, discount:150, stock:1, img:``, desc:`Kaplan Çelik Bileklik` },
-  { title:`yılan desen bileklik Bileklik`, code:`1649131669.0`, price:125, discount:75, stock:2, img:``, desc:`yılan desen bileklik Bileklik` },
-  { title:`İtalyan Ataç Sarmal Kombin Gümüş Renk Çelik Bileklik`, code:`1649133326.0`, price:200, discount:150, stock:2, img:``, desc:`İtalyan Ataç Sarmal Kombin Gümüş Renk Çelik Bileklik` },
-  { title:`İtalyan Ataç Sarmal Kombin Gümüş Renk Çelik Bileklik`, code:`15011649133327.0`, price:200, discount:150, stock:2, img:``, desc:`İtalyan Ataç Sarmal Kombin Gümüş Renk Çelik Bileklik` },
-  { title:`Gümüş Renk İtalyan Bakla Zincirli Baget Taşlı Çelik Kolye`, code:`1649133219.0`, price:250, discount:175, stock:1, img:``, desc:`Gümüş Renk İtalyan Bakla Zincirli Baget Taşlı Çelik Kolye` },
-  { title:`Gitar Model Unisex Arnavut Zincir Çelik Kolye`, code:`1649133317.0`, price:180, discount:125, stock:4, img:``, desc:`Gitar Model Unisex Arnavut Zincir Çelik Kolye` },
-  { title:`özel unisex kolye`, code:`1649132674.0`, price:160, discount:120, stock:1, img:``, desc:`özel unisex kolye` }
-  // ... JSON’daki diğer tüm ürünler buraya
-];
+    const SELLER_WHATSAPP = '+905303042950'; // wa.me formatı
+    const SELLER_IBAN = 'TR00 0000 0000 0000 0000 0000 00';
+    const SELLER_IBAN_NAME = 'BYtakı';
+    const SELLER_BANK = 'Banka Adı';
 
     // === STORAGE KEYS ===
     const LS_REVIEWS='bytaki_reviews';
     const LS_PURCHASED='bytaki_purchased';
     const LS_CART='bytaki_cart';
     const LS_STOCK_OVR='bytaki_stock_overrides';
-    const LS_IMG_MAP='bytaki_img_map'; // kodla yönetimi bozmaz; sadece stok güncellemesi kalıcı olur
+    const LS_IMG_MAP='bytaki_img_map';
 
     // === STATE ===
     let reviews  = JSON.parse(localStorage.getItem(LS_REVIEWS) || '{}');
-    let purchased= JSON.parse(localStorage.getItem(LS_PURCHASED) || '[]'); // tamamlanan siparişlerdeki ürün kodları
-    let cart     = JSON.parse(localStorage.getItem(LS_CART) || '[]'); // [{code, qty}]
-    let stockOv  = JSON.parse(localStorage.getItem(LS_STOCK_OVR) || '{}');
-    let IMG_MAP  = JSON.parse(localStorage.getItem(LS_IMG_MAP) || '{}'); // {code: imgUrl} // {code: stok}
+    let purchased= JSON.parse(localStorage.getItem(LS_PURCHASED) || '[]');
+    let cart     = JSON.parse(localStorage.getItem(LS_CART) || '[]');
+    let stockOv  = JSON.parse(localStorage.getItem(LS_STOCK_OVR) || '{}'); // {code: stok}
+    let IMG_MAP  = JSON.parse(localStorage.getItem(LS_IMG_MAP) || '{}');   // {code: url}
     let customer = {name:'', phone:'', address:''};
-    let lastOrder = null; // {code, items:[{title,code,qty,price}], total}
+    let lastOrder = null; // {code, items, total, customer}
 
     const $ = s => document.querySelector(s);
     const fmt = n => '₺' + Number(n||0).toLocaleString('tr-TR');
 
-    // WhatsApp linklerini bağla
+    // WhatsApp linkleri
     const waNum = SELLER_WHATSAPP.replace(/\D/g,'');
     if(waNum){
       const waUrl = `https://wa.me/${waNum}`;
-      const wh = document.getElementById('waHeader');
       const wf = document.getElementById('waFooter');
-      if(wh){ wh.href = waUrl; wh.textContent = SELLER_WHATSAPP; wh.classList.remove('hidden'); }
+      const cg = document.getElementById('contactSellerGlobal');
       if(wf){ wf.href = waUrl; wf.textContent = SELLER_WHATSAPP; }
+      if(cg){ cg.href = waUrl; }
+      document.getElementById('contactSellerStep3').href = waUrl;
     }
 
     function saveAll(){
@@ -241,16 +221,43 @@
       localStorage.setItem(LS_PURCHASED, JSON.stringify(purchased));
       localStorage.setItem(LS_CART, JSON.stringify(cart));
       localStorage.setItem(LS_STOCK_OVR, JSON.stringify(stockOv));
+      localStorage.setItem(LS_IMG_MAP, JSON.stringify(IMG_MAP));
     }
 
-    // Stok okuma / yazma (kodla yönetimi bozmadan kalıcı düşüş)
     function getStock(p){
       const ov = stockOv[p.code];
       return (ov===0 || ov) ? ov : (Number(p.stock)||0);
     }
     function setStock(code, value){ stockOv[code] = Math.max(0, Number(value)||0); saveAll(); }
 
-    // === ÜRÜN LİSTE ===
+    // === DEFAULT ÜRÜNLER (kodu buradan yönetebilirsin) ===
+    const DEFAULT_PRODUCTS = [
+      { title:'Cadena Göz Ataç Zincir Kombin Altın Renk Çelik Bileklik', code:'1649133321.0', price:220, discount:150, stock:1, img:'', desc:'Cadena Göz Ataç Zincir Kombin Altın Renk Çelik Bileklik' },
+      { title:'İç İçe Geçmeli Arnavut Asansör Unisex Gümüş Renk Çelik Bileklik', code:'1649132804.0', price:125, discount:75, stock:2, img:'', desc:'İç İçe Geçmeli Arnavut Asansör Unisex Gümüş Renk Çelik Bileklik' },
+      { title:'Kılçık Unisex Çelik Bileklik', code:'1649133368.0', price:100, discount:70, stock:4, img:'', desc:'Kılçık Unisex Çelik Bileklik' },
+      { title:'Yılan kolye bileklik seti', code:'164913249.0', price:200, discount:150, stock:5, img:'', desc:'Yılan kolye bileklik seti' },
+      { title:'Kaplan Çelik Bileklik', code:'15011649132631.0', price:200, discount:150, stock:2, img:'', desc:'Kaplan Çelik Bileklik' },
+      { title:'Gitar Model Unisex Arnavut Zincir Çelik Kolye', code:'1649133317.0', price:180, discount:125, stock:4, img:'', desc:'Gitar Model Unisex Arnavut Zincir Çelik Kolye' },
+      { title:'Gümüş Renk İtalyan Bakla Zincirli Baget Taşlı Çelik Kolye', code:'1649133219.0', price:250, discount:175, stock:1, img:'', desc:'Gümüş Renk İtalyan Bakla Zincirli Baget Taşlı Çelik Kolye' }
+    ];
+    let PRODUCTS = [];
+
+    // === ÜRÜNLERİ YÜKLE (varsayılan: products.json varsa onu kullan, yoksa DEFAULT) ===
+    async function initProducts(){
+      try{
+        const res = await fetch('products.json', {cache:'no-store'});
+        if(res.ok){
+          PRODUCTS = await res.json();
+        } else {
+          PRODUCTS = DEFAULT_PRODUCTS;
+        }
+      }catch(e){
+        PRODUCTS = DEFAULT_PRODUCTS;
+      }
+      renderProducts();
+    }
+
+    // === LİSTELE ===
     function renderProducts(){
       $('#productGrid').innerHTML = PRODUCTS.map(p=>{
         const curStock = getStock(p);
@@ -285,10 +292,9 @@
       saveAll(); updateCartBadge(); openCheckout(1); renderCart();
     }
 
-    function updateCartBadge(){
-      const c = cart.reduce((s,i)=>s+i.qty,0); $('#cartCount').textContent = c; }
+    function updateCartBadge(){ const c = cart.reduce((s,i)=>s+i.qty,0); $('#cartCount').textContent = c; }
 
-    // === SEPET & CHECKOUT ===
+    // === CHECKOUT ===
     $('#cartBtn').onclick = ()=>{ openCheckout(1); renderCart(); };
     $('#closeCheckout').onclick = ()=> closeCheckout();
 
@@ -307,8 +313,9 @@
       if(cart.length===0){ box.innerHTML = '<p class="text-slate-500">Sepet boş.</p>'; $('#cartSubtotal').textContent=fmt(0); return; }
       box.innerHTML = cart.map(ci=>{
         const p = PRODUCTS.find(x=>x.code===ci.code);
+        const imgUrl = (p.img && p.img.trim()) || IMG_MAP[p.code] || "https://images.unsplash.com/photo-1613339027986-b94d85708949?w=800&auto=format&fit=crop";
         return `<div class='flex items-center gap-3 border rounded-xl p-3'>
-          <img src='${p.img||"https://images.unsplash.com/photo-1613339027986-b94d85708949?w=800&auto=format&fit=crop"}' class='w-16 h-16 object-cover rounded border'>
+          <img src='${imgUrl}' class='w-16 h-16 object-cover rounded border'>
           <div class='flex-1'>
             <div class='font-semibold'>${p.title}</div>
             <div class='text-xs text-slate-500'>${p.code}</div>
@@ -334,7 +341,6 @@
     $('#toStep2').onclick = ()=>{ if(cart.length===0){ alert('Sepet boş.'); return; } goStep(2); };
     $('#backTo1').onclick = ()=> goStep(1);
     $('#toStep3').onclick = ()=>{
-      // bilgileri kaydet
       const fd = new FormData($('#infoForm'));
       customer = { name: fd.get('name')||'', phone: fd.get('phone')||'', address: fd.get('address')||'' };
       if(!customer.name){ alert('Ad Soyad gerekli'); return; }
@@ -358,9 +364,7 @@
       if(mode==='eft'){
         openPaymentPage();
       } else {
-        const msg = encodeURIComponent(`Merhaba, sipariş vermek istiyorum.%0AAd Soyad: ${customer.name}%0ATelefon: ${customer.phone||'-'}%0AAdres: ${(customer.address||'-').replace(/
-/g,' ')}%0ASipariş Kodu: ${orderCode}%0A%0AÜrünler:%0A${items.map(i=>`- ${i.title} (${i.code}) x${i.qty} = ${i.price*i.qty} TL`).join('
-')}%0AToplam: ${total} TL`);
+        const msg = encodeURIComponent(`Merhaba, sipariş vermek istiyorum.%0AAd Soyad: ${customer.name}%0ATelefon: ${customer.phone||'-'}%0AAdres: ${(customer.address||'-').replace(/\n/g,' ')}%0ASipariş Kodu: ${orderCode}%0A%0AÜrünler:%0A${items.map(i=>`- ${i.title} (${i.code}) x${i.qty} = ${i.price*i.qty} TL`).join('\n')}%0AToplam: ${total} TL`);
         const url = `https://wa.me/${waNum}?text=${msg}`;
         window.open(url,'_blank');
         alert('Siparişin WhatsApp\'a aktarıldı!');
@@ -369,7 +373,6 @@
     }
 
     function openPaymentPage(){
-      // IBAN sayfası doldur
       $('#ibanName').textContent = SELLER_IBAN_NAME;
       $('#ibanText').textContent = SELLER_IBAN;
       $('#bankName').textContent = SELLER_BANK;
@@ -385,60 +388,50 @@
     $('#closePayment').onclick = ()=>{ $('#paymentPage').classList.add('hidden'); location.hash=''; };
     $('#copyIban').onclick = ()=>{ navigator.clipboard.writeText(SELLER_IBAN); alert('IBAN kopyalandı'); };
 
-    // === YORUMLAR ===
-    function openReviews(code){
-      const list = reviews[code] || [];
-      let content = list.map(r=>`- ${r.text}${r.reply?"
-  ↳ Admin: "+r.reply:""}`).join('
-');
-      if(!content) content = 'Henüz yorum yok.';
-      if(purchased.includes(code)){
-        const newText = prompt('Yorumunu yaz (boş bırakırsan yorum eklenmez):');
-        if(newText){ if(!reviews[code]) reviews[code]=[]; reviews[code].push({text:newText}); saveAll(); alert('Yorum kaydedildi!'); }
-      }
-      alert('Yorumlar:
-' + content + (purchased.includes(code)?'
-
-(Satın aldığın için yorum ekleyebilirsin)':'
-
-(Yorum eklemek için önce satın almalısın)'));
-    }
-
-    // === ÜRÜN DETAY ===
+    // === ÜRÜN DETAY & YORUMLAR ===
     function openDetail(code){
       const p = PRODUCTS.find(x=>x.code===code); if(!p) return;
-      document.getElementById('detailTitle').textContent = p.title;
       const dImg = (p.img && p.img.trim()) || IMG_MAP[p.code] || 'https://images.unsplash.com/photo-1613339027986-b94d85708949?w=800&auto=format&fit=crop';
-      document.getElementById('detailImg').src = dImg;
-      document.getElementById('detailImg').alt = p.title;
-      document.getElementById('detailCode').textContent = p.code;
-      document.getElementById('detailDisc').textContent = fmt(p.discount);
-      document.getElementById('detailPrice').textContent = fmt(p.price);
-      document.getElementById('detailDesc').textContent = p.desc || 'Bu ürün için açıklama henüz eklenmedi.';
-      document.getElementById('detailAddCart').onclick = ()=>{ addToCart(code); };
-      document.getElementById('detailContact').href = `https://wa.me/${waNum}?text=${encodeURIComponent('Merhaba, '+p.title+' ('+p.code+') hakkında bilgi almak istiyorum.')}`;
-      document.getElementById('detailContinue').onclick = ()=>{ closeDetail(); };
-      document.getElementById('detailHome').onclick = (e)=>{ e.preventDefault(); closeDetail(); window.scrollTo({top:0,behavior:'smooth'}); };
+      $('#detailTitle').textContent = p.title;
+      $('#detailImg').src = dImg; $('#detailImg').alt = p.title;
+      $('#detailCode').textContent = p.code;
+      $('#detailDisc').textContent = fmt(p.discount);
+      $('#detailPrice').textContent = fmt(p.price);
+      $('#detailDesc').textContent = p.desc || 'Bu ürün için açıklama henüz eklenmedi.';
+
+      const list = reviews[code] || [];
+      $('#detailReviews').innerHTML = list.length
+        ? list.map(r=>`<div>• ${r.text}${r.reply?`<div class="text-slate-500">↳ Satıcı: ${r.reply}</div>`:''}</div>`).join('')
+        : '<div>Henüz yorum yok.</div>';
+
+      $('#detailAddReview').onclick = ()=>{
+        if(!purchased.includes(code)) { alert('Yorum eklemek için ürünü satın almış olman gerekir.'); return; }
+        const t = prompt('Yorum / sorunuzu yazın:');
+        if(t){ if(!reviews[code]) reviews[code]=[]; reviews[code].push({text:t}); saveAll(); openDetail(code); alert('Yorum kaydedildi!'); }
+      };
+
+      $('#detailAddCart').onclick = ()=> addToCart(code);
+      $('#detailContact').href = `https://wa.me/${waNum}?text=${encodeURIComponent('Merhaba, '+p.title+' ('+p.code+') hakkında bilgi almak istiyorum.')}`;
+      $('#detailContinue').onclick = ()=> closeDetail();
+      $('#detailHome').onclick = (e)=>{ e.preventDefault(); closeDetail(); window.scrollTo({top:0,behavior:'smooth'}); };
+
       const dm = document.getElementById('detailModal'); dm.classList.remove('hidden'); dm.classList.add('flex');
     }
     function closeDetail(){ const dm = document.getElementById('detailModal'); dm.classList.add('hidden'); dm.classList.remove('flex'); }
     document.getElementById('detailClose').onclick = closeDetail;
     document.getElementById('detailModal').addEventListener('click', (e)=>{ if(e.target.id==='detailModal') closeDetail(); });
 
-    // === NAVİGASYON BUTONLARI ===
-    document.getElementById('continueShopping').onclick = ()=> window.scrollTo({top:0,behavior:'smooth'});
+    // === GLOBAL NAV HANDLERS ===
+    document.getElementById('continueShoppingGlobal').onclick = ()=> window.scrollTo({top:0,behavior:'smooth'});
     document.getElementById('continueShopping2').onclick = ()=>{ closeCheckout(); window.scrollTo({top:0,behavior:'smooth'}); };
-    document.getElementById('goHome').onclick = (e)=>{ e.preventDefault(); window.scrollTo({top:0,behavior:'smooth'}); };
+    document.getElementById('goHomeGlobal').onclick = (e)=>{ e.preventDefault(); window.scrollTo({top:0,behavior:'smooth'}); };
     document.getElementById('goHome2').onclick = (e)=>{ e.preventDefault(); closeCheckout(); window.scrollTo({top:0,behavior:'smooth'}); };
-    document.getElementById('contactSellerMain').href = `https://wa.me/${waNum}`;
-    document.getElementById('contactSellerStep3').href = `https://wa.me/${waNum}`;
 
-    // Görsel modal kontrol
+    // Görsel modal
     document.getElementById('openImgImport').onclick = ()=>{ const m=document.getElementById('imgModal'); m.classList.remove('hidden'); m.classList.add('flex'); };
     document.getElementById('imgClose').onclick = ()=>{ const m=document.getElementById('imgModal'); m.classList.add('hidden'); m.classList.remove('flex'); };
     document.getElementById('imgApply').onclick = ()=>{
-      const txt = document.getElementById('imgText').value.split('
-');
+      const txt = document.getElementById('imgText').value.split('\n');
       let count=0;
       txt.forEach(line=>{
         if(!line.trim()) return;
@@ -451,10 +444,13 @@
       renderProducts();
       alert(count + ' görsel kaydedildi');
     };
-    document.getElementById('imgClear').onclick = ()=>{ if(!confirm('Tüm görsel eşleştirmeleri silinsin mi?')) return; IMG_MAP={}; localStorage.setItem(LS_IMG_MAP,'{}'); renderProducts(); };
+    document.getElementById('imgClear').onclick = ()=>{
+      if(!confirm('Tüm görsel eşleştirmeleri silinsin mi?')) return;
+      IMG_MAP={}; localStorage.setItem(LS_IMG_MAP,'{}'); renderProducts();
+    };
 
-    // İlk render
-    renderProducts();
+    // Başlat
+    initProducts();
   </script>
 </body>
 </html>
