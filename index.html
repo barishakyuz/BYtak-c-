@@ -191,13 +191,21 @@
     // Ürünleri ekle/çıkar: Aşağıdaki PRODUCTS dizisini düzenle. Alanlar: title, code, price, discount, stock, img
     // IKAS'tan dönüştürdüğüm JSON/CSV'yi buraya yapıştırabilirsin.
     const PRODUCTS = [
-  { title:'Cadena Göz Ataç Zincir Kombin Altın Renk Çelik Bileklik', code:'1649133321.0', price:220, discount:150, stock:1, img:'', desc:'Altın renk çelik bileklik.' },
-  { title:'İç İçe Geçmeli Arnavut Asansör Unisex Gümüş Renk Çelik Bileklik', code:'1649132804.0', price:125, discount:75, stock:2, img:'', desc:'Unisex çelik bileklik.' },
-  { title:'Yılan Kolye Bileklik Seti', code:'164913249.0', price:200, discount:150, stock:5, img:'', desc:'Set halinde kolye ve bileklik.' },
+  { title:`Cadena Göz Ataç Zincir Kombin Altın Renk Çelik Bileklik`, code:`1649133321.0`, price:220, discount:150, stock:1, img:``, desc:`Cadena Göz Ataç Zincir Kombin Altın Renk Çelik Bileklik` },
+  { title:`Iç Içe Geçmeli Arnavut Asansör Unisex Gümüş Renk Çelik Bileklik`, code:`1649132804.0`, price:125, discount:75, stock:2, img:``, desc:`Iç Içe Geçmeli Arnavut Asansör Unisex Gümüş Renk Çelik Bileklik` },
+  { title:`Kılçık Unisex Çelik Bileklik`, code:`1649133368.0`, price:100, discount:70, stock:4, img:``, desc:`Kılçık Unisex Çelik Bileklik` },
+  { title:`Kılçık Unisex Çelik Bileklik`, code:`15011649133369.0`, price:100, discount:70, stock:1, img:``, desc:`Kılçık Unisex Çelik Bileklik` },
+  { title:`Yılan kolye bileklik seti`, code:`164913249.0`, price:200, discount:150, stock:5, img:``, desc:`Yılan kolye bileklik seti` },
+  { title:`Kaplan Çelik Bileklik`, code:`15011649132631.0`, price:200, discount:150, stock:2, img:``, desc:`Kaplan Çelik Bileklik` },
+  { title:`Kaplan Çelik Bileklik`, code:`15011649132630.0`, price:200, discount:150, stock:1, img:``, desc:`Kaplan Çelik Bileklik` },
+  { title:`yılan desen bileklik Bileklik`, code:`1649131669.0`, price:125, discount:75, stock:2, img:``, desc:`yılan desen bileklik Bileklik` },
+  { title:`İtalyan Ataç Sarmal Kombin Gümüş Renk Çelik Bileklik`, code:`1649133326.0`, price:200, discount:150, stock:2, img:``, desc:`İtalyan Ataç Sarmal Kombin Gümüş Renk Çelik Bileklik` },
+  { title:`İtalyan Ataç Sarmal Kombin Gümüş Renk Çelik Bileklik`, code:`15011649133327.0`, price:200, discount:150, stock:2, img:``, desc:`İtalyan Ataç Sarmal Kombin Gümüş Renk Çelik Bileklik` },
+  { title:`Gümüş Renk İtalyan Bakla Zincirli Baget Taşlı Çelik Kolye`, code:`1649133219.0`, price:250, discount:175, stock:1, img:``, desc:`Gümüş Renk İtalyan Bakla Zincirli Baget Taşlı Çelik Kolye` },
+  { title:`Gitar Model Unisex Arnavut Zincir Çelik Kolye`, code:`1649133317.0`, price:180, discount:125, stock:4, img:``, desc:`Gitar Model Unisex Arnavut Zincir Çelik Kolye` },
+  { title:`özel unisex kolye`, code:`1649132674.0`, price:160, discount:120, stock:1, img:``, desc:`özel unisex kolye` }
   // ... JSON’daki diğer tüm ürünler buraya
 ];
-
-    ];
 
     // === STORAGE KEYS ===
     const LS_REVIEWS='bytaki_reviews';
