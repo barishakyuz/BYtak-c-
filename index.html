@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>BYtakı | Admin Panel & E‑Ticaret</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .card{box-shadow:0 8px 30px rgba(0,0,0,0.06)}
+    .step.active{background:#6d28d9;color:#fff}
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+  <header class="bg-white border-b sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto p-4 flex items-center gap-3">
+      <h1 class="text-2xl font-extrabold">BY<span class="text-fuchsia-600">takı</span></h1>
+      <div class="ml-auto flex items-center gap-2">
+        <button id="cartBtn" class="relative px-3 py-2 rounded-xl border">🛍️ Sepet <span id="cartCount" class="absolute -top-2 -right-2 text-xs bg-fuchsia-600 text-white rounded-full px-1">0</span></button>
+        <button id="adminBtn" class="px-3 py-2 rounded-xl border">⚙️ Admin</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto p-6">
+    <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+  </main>
+
+  <!-- Admin Login Modal -->
+  <div id="adminLogin" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
+    <div class="bg-white p-6 rounded-xl card w-full max-w-sm">
+      <h2 class="text-lg font-bold mb-4">Admin Girişi</h2>
+      <input id="adminEmail" type="email" placeholder="E-posta" class="w-full mb-2 p-2 border rounded"/>
+      <input id="adminPass" type="password" placeholder="Şifre" class="w-full mb-4 p-2 border rounded"/>
+      <button id="loginBtn" class="w-full bg-fuchsia-600 text-white py-2 rounded">Giriş Yap</button>
+      <button onclick="toggleLogin(false)" class="w-full mt-2 border py-2 rounded">İptal</button>
+      <p class="text-xs text-slate-500 mt-2">* Demo amaçlı istemci tarafı doğrulama. Gerçek kullanımda sunuculu kimlik doğrulama önerilir.</p>
+    </div>
+  </div>
+
+  <!-- Admin Panel -->
+  <div id="adminPanel" class="fixed inset-0 bg-white hidden z-40 overflow-y-auto">
+    <div class="p-6 max-w-5xl mx-auto">
+      <div class="flex items-center gap-2 mb-4">
+        <h2 class="text-2xl font-bold">Admin Paneli</h2>
+        <button onclick="logout()" class="ml-auto px-4 py-2 border rounded">Çıkış Yap</button>
+      </div>
+
+      <!-- Ürün Ekle -->
+      <h3 class="font-semibold mb-2">Yeni Ürün Ekle</h3>
+      <form id="addProductForm" class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+        <input name="title" placeholder="Ürün adı" class="border p-2 rounded" required>
+        <input name="code" placeholder="Ürün kodu" class="border p-2 rounded" required>
+        <input name="price" type="number" placeholder="Fiyat" class="border p-2 rounded" required>
+        <input name="discount" type="number" placeholder="İndirimli fiyat" class="border p-2 rounded" required>
+        <input name="stock" type="number" placeholder="Stok" class="border p-2 rounded" required>
+        <input name="img" placeholder="Görsel URL" class="border p-2 rounded" required>
+        <button class="col-span-1 sm:col-span-2 bg-emerald-600 text-white py-2 rounded">Ekle</button>
+      </form>
+
+      <!-- Mevcut Ürünler -->
+      <h3 class="font-semibold mb-2">Ürün Yönetimi</h3>
+      <div id="adminProducts" class="space-y-3"></div>
+
+      <!-- Yorum Yönetimi -->
+      <h3 class="font-semibold mb-2 mt-6">Yorumlar</h3>
+      <div id="adminReviews" class="space-y-3"></div>
+    </div>
+  </div>
+
+  <!-- Sepet & Checkout (tam ekran) -->
+  <div id="checkoutView" class="fixed inset-0 bg-white hidden z-40 overflow-y-auto">
+    <div class="max-w-4xl mx-auto p-6">
+      <div class="flex items-center gap-2 mb-6">
+        <h3 class="text-2xl font-bold">Satın Alma</h3>
+        <button id="closeCheckout" class="ml-auto px-3 py-2 border rounded">Kapat</button>
+      </div>
+      <!-- Steps -->
+      <div class="grid grid-cols-3 gap-2 mb-6">
+        <div id="s1" class="step text-center py-2 rounded-xl border">1) Sepet</div>
+        <div id="s2" class="step text-center py-2 rounded-xl border">2) Bilgiler</div>
+        <div id="s3" class="step text-center py-2 rounded-xl border">3) Ödeme</div>
+      </div>
+
+      <!-- Step 1: Sepet -->
+      <section id="step1" class="space-y-3">
+        <div id="cartItems" class="space-y-3"></div>
+        <div class="flex items-center justify-between border-t pt-4">
+          <div class="text-lg">Ara Toplam: <strong id="cartSubtotal">₺0</strong></div>
+          <button id="toStep2" class="px-4 py-2 rounded-xl bg-fuchsia-600 text-white">Devam Et</button>
+        </div>
+      </section>
+
+      <!-- Step 2: Bilgiler -->
+      <section id="step2" class="hidden">
+        <form id="infoForm" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <input name="name" placeholder="Ad Soyad" class="border p-2 rounded" required>
+          <input name="phone" placeholder="Telefon" class="border p-2 rounded">
+          <textarea name="address" placeholder="Adres (isteğe bağlı)" rows="3" class="border p-2 rounded sm:col-span-2"></textarea>
+        </form>
+        <div class="flex items-center justify-between mt-4">
+          <button id="backTo1" class="px-4 py-2 rounded-xl border">Geri</button>
+          <button id="toStep3" class="px-4 py-2 rounded-xl bg-fuchsia-600 text-white">Ödeme Adımı</button>
+        </div>
+      </section>
+
+      <!-- Step 3: Ödeme Seçenekleri -->
+      <section id="step3" class="hidden">
+        <div class="card border rounded-2xl p-4 mb-4">
+          <h4 class="font-semibold mb-2">EFT / Havale</h4>
+          <p class="text-sm text-slate-600">EFT ile ödemeyi seçtiğinde IBAN bilgilerinin olduğu sayfaya yönlendirileceksin.</p>
+          <button id="payEFT" class="mt-3 px-4 py-2 rounded-xl bg-emerald-600 text-white">EFT ile Öde (IBAN sayfası)</button>
+        </div>
+        <div class="card border rounded-2xl p-4">
+          <h4 class="font-semibold mb-2">WhatsApp'tan İletişime Geç</h4>
+          <p class="text-sm text-slate-600">Sipariş detayların hazır metinle WhatsApp'a aktarılır.</p>
+          <button id="payWA" class="mt-3 px-4 py-2 rounded-xl border">WhatsApp'tan İletişime Geç</button>
+        </div>
+        <div class="mt-4">
+          <button id="backTo2" class="px-4 py-2 rounded-xl border">Geri</button>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- EFT Ödeme (IBAN) Sayfası -->
+  <div id="paymentPage" class="fixed inset-0 bg-white hidden z-40 overflow-y-auto">
+    <div class="max-w-3xl mx-auto p-6">
+      <div class="flex items-center gap-2 mb-4">
+        <h3 class="text-2xl font-bold">EFT / Havale Bilgileri</h3>
+        <button id="closePayment" class="ml-auto px-3 py-2 border rounded">Kapat</button>
+      </div>
+      <div class="card border rounded-2xl p-4">
+        <p><strong>Hesap Adı:</strong> <span id="ibanName"></span></p>
+        <p class="mt-1"><strong>IBAN:</strong> <span id="ibanText" class="font-mono"></span> <button id="copyIban" class="ml-2 px-2 py-1 text-xs border rounded">Kopyala</button></p>
+        <p class="mt-1"><strong>Banka:</strong> <span id="bankName"></span></p>
+        <p class="mt-3 text-sm text-slate-600">Açıklama kısmına lütfen <strong id="orderCodeSpan"></strong> yazınız.</p>
+      </div>
+      <div class="mt-6">
+        <h4 class="font-semibold mb-2">Sipariş Özeti</h4>
+        <div id="orderSummary" class="space-y-2"></div>
+        <div class="mt-2 text-lg">Toplam: <strong id="orderTotal"></strong></div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="mt-10 border-t">
+    <div class="max-w-7xl mx-auto p-4 text-sm">
+      Öneri/Şikayet: <a class="underline" href="mailto:barisha@yaani.com?subject=BYtaki%20Geri%20Bildirim">barisha@yaani.com</a>
+    </div>
+  </footer>
+
+  <script>
+    // === AYARLAR ===
+    const AUTH_EMAIL = 'barisha@yaani.com';
+    const AUTH_PASS  = 'Helin21';
+    const SELLER_WHATSAPP = '+905303042950'; // wa.me için uluslararası format
+    const SELLER_IBAN = 'TR00 0000 0000 0000 0000 0000 00'; // IBANINIZI girin
+    const SELLER_IBAN_NAME = 'BYtakı'; // hesap adı
+    const SELLER_BANK = 'Banka Adı'; // banka adı
+
+    // === STORAGE KEYS ===
+    const LS_PRODUCTS='bytaki_products', LS_REVIEWS='bytaki_reviews', LS_PURCHASED='bytaki_purchased', LS_CART='bytaki_cart';
+
+    // === STATE ===
+    let products = JSON.parse(localStorage.getItem(LS_PRODUCTS) || '[]');
+    let reviews  = JSON.parse(localStorage.getItem(LS_REVIEWS) || '{}');
+    let purchased= JSON.parse(localStorage.getItem(LS_PURCHASED) || '[]'); // tamamlanan siparişlerdeki ürün kodları
+    let cart     = JSON.parse(localStorage.getItem(LS_CART) || '[]'); // [{code, qty}]
+    let loggedIn = false;
+    let customer = {name:'', phone:'', address:''};
+    let lastOrder = null; // {code, items:[{title,code,qty,price}], total}
+
+    const $ = s => document.querySelector(s);
+    const fmt = n => '₺' + Number(n||0).toLocaleString('tr-TR');
+
+    function saveAll(){
+      localStorage.setItem(LS_PRODUCTS, JSON.stringify(products));
+      localStorage.setItem(LS_REVIEWS, JSON.stringify(reviews));
+      localStorage.setItem(LS_PURCHASED, JSON.stringify(purchased));
+      localStorage.setItem(LS_CART, JSON.stringify(cart));
+    }
+
+    // === ÜRÜN LİSTE ===
+    function renderProducts(){
+      $('#productGrid').innerHTML = products.map(p=>{
+        const out = (Number(p.stock)||0) <= 0;
+        return `
+        <article class='card bg-white p-4 rounded-2xl border ${out?"opacity-60":""}'>
+          <img src='${p.img}' class='w-full h-48 object-cover rounded mb-3' alt='${p.title}'>
+          <h3 class='font-bold'>${p.title}</h3>
+          <p class='text-xs text-slate-500'>Kod: ${p.code}</p>
+          <p class='text-xs'>Stok: ${p.stock||0}</p>
+          <div class='mt-1'><span class='text-fuchsia-600 font-bold'>${fmt(p.discount)}</span> <span class='line-through text-sm text-slate-400'>${fmt(p.price)}</span></div>
+          <div class='mt-3 flex gap-2'>
+            <button onclick="addToCart('${p.code}')" class='px-3 py-2 rounded-xl border' ${out?'disabled':''}>Sepete Ekle</button>
+            <button onclick="openReviews('${p.code}')" class='px-3 py-2 rounded-xl border'>Yorumlar</button>
+          </div>
+        </article>`;
+      }).join('');
+      updateCartBadge();
+    }
+
+    function addToCart(code){
+      const p = products.find(x=>x.code===code); if(!p) return;
+      if((Number(p.stock)||0) <= 0){ alert('Stok yok'); return; }
+      const it = cart.find(x=>x.code===code);
+      if(it) it.qty++ ; else cart.push({code, qty:1});
+      saveAll(); updateCartBadge(); openCheckout(1); renderCart();
+    }
+
+    function updateCartBadge(){
+      const c = cart.reduce((s,i)=>s+i.qty,0); $('#cartCount').textContent = c; }
+
+    // === SEPET & CHECKOUT ===
+    $('#cartBtn').onclick = ()=>{ openCheckout(1); renderCart(); };
+    $('#closeCheckout').onclick = ()=> closeCheckout();
+
+    function openCheckout(step){ $('#checkoutView').classList.remove('hidden'); goStep(step||1); }
+    function closeCheckout(){ $('#checkoutView').classList.add('hidden'); }
+
+    function goStep(n){
+      ['s1','s2','s3'].forEach((id,i)=>{ $('#'+id).classList.toggle('active', i===n-1); });
+      $('#step1').classList.toggle('hidden', n!==1);
+      $('#step2').classList.toggle('hidden', n!==2);
+      $('#step3').classList.toggle('hidden', n!==3);
+    }
+
+    function renderCart(){
+      const box = $('#cartItems');
+      if(cart.length===0){ box.innerHTML = '<p class="text-slate-500">Sepet boş.</p>'; $('#cartSubtotal').textContent=fmt(0); return; }
+      box.innerHTML = cart.map(ci=>{
+        const p = products.find(x=>x.code===ci.code);
+        return `<div class='flex items-center gap-3 border rounded-xl p-3'>
+          <img src='${p.img}' class='w-16 h-16 object-cover rounded border'>
+          <div class='flex-1'>
+            <div class='font-semibold'>${p.title}</div>
+            <div class='text-xs text-slate-500'>${p.code}</div>
+            <div class='text-sm mt-1'>${fmt(p.discount)} × ${ci.qty}</div>
+          </div>
+          <div class='flex items-center gap-1'>
+            <button class='px-2 py-1 border rounded' onclick="decQty('${ci.code}')">-</button>
+            <span class='w-6 text-center'>${ci.qty}</span>
+            <button class='px-2 py-1 border rounded' onclick="incQty('${ci.code}')">+</button>
+          </div>
+          <button class='ml-2 text-slate-500 hover:text-red-600' onclick="removeItem('${ci.code}')">🗑️</button>
+        </div>`;
+      }).join('');
+      const subtotal = cart.reduce((s,ci)=>{ const p=products.find(x=>x.code===ci.code); return s + (Number(p.discount)||0)*ci.qty; },0);
+      $('#cartSubtotal').textContent = fmt(subtotal);
+    }
+
+    window.incQty = (code)=>{ const it=cart.find(x=>x.code===code); if(!it) return; const p=products.find(x=>x.code===code); if(it.qty < (p.stock||0)) it.qty++; saveAll(); renderCart(); updateCartBadge(); }
+    window.decQty = (code)=>{ const it=cart.find(x=>x.code===code); if(!it) return; it.qty = Math.max(1, it.qty-1); saveAll(); renderCart(); updateCartBadge(); }
+    window.removeItem = (code)=>{ cart = cart.filter(x=>x.code!==code); saveAll(); renderCart(); updateCartBadge(); }
+
+    // Step nav
+    $('#toStep2').onclick = ()=>{ if(cart.length===0){ alert('Sepet boş.'); return; } goStep(2); };
+    $('#backTo1').onclick = ()=> goStep(1);
+    $('#toStep3').onclick = ()=>{
+      // bilgileri kaydet
+      const fd = new FormData($('#infoForm'));
+      customer = { name: fd.get('name')||'', phone: fd.get('phone')||'', address: fd.get('address')||'' };
+      if(!customer.name){ alert('Ad Soyad gerekli'); return; }
+      goStep(3);
+    };
+    $('#backTo2').onclick = ()=> goStep(2);
+
+    // Final: EFT veya WhatsApp
+    $('#payEFT').onclick = ()=> finalizeOrder('eft');
+    $('#payWA').onclick  = ()=> finalizeOrder('wa');
+
+    function finalizeOrder(mode){
+      if(cart.length===0) { alert('Sepet boş.'); return; }
+      // stok kontrol
+      for(const ci of cart){ const p=products.find(x=>x.code===ci.code); if(!p || (p.stock||0) < ci.qty){ alert(`${ci.code} için stok yetersiz`); return; } }
+      // stok düş ve purchased işaretle
+      const items = cart.map(ci=>{ const p=products.find(x=>x.code===ci.code); p.stock = Math.max(0,(p.stock||0)-ci.qty); if(!purchased.includes(ci.code)) purchased.push(ci.code); return {title:p.title, code:p.code, qty:ci.qty, price:Number(p.discount)||0}; });
+      const total = items.reduce((s,i)=> s + i.price*i.qty, 0);
+      const orderCode = 'BY' + Date.now();
+      lastOrder = { code: orderCode, items, total, customer };
+      cart = []; saveAll(); renderProducts(); renderCart(); updateCartBadge();
+
+      if(mode==='eft'){
+        // IBAN sayfasına götür
+        openPaymentPage();
+      } else {
+        // WhatsApp bağlantısı
+        const lines = items.map(i=>`- ${i.title} (${i.code}) x${i.qty} = ${i.price*i.qty} TL`).join('%0A');
+        const msg = encodeURIComponent(`Merhaba, sipariş vermek istiyorum.%0AAd Soyad: ${customer.name}%0ATelefon: ${customer.phone||'-'}%0AAdres: ${(customer.address||'-').replace(/\n/g,' ')}%0ASipariş Kodu: ${orderCode}%0A%0AÜrünler:%0A${items.map(i=>`- ${i.title} (${i.code}) x${i.qty} = ${i.price*i.qty} TL`).join('\n')}%0AToplam: ${total} TL`);
+        const url = `https://wa.me/${SELLER_WHATSAPP.replace(/\D/g,'')}?text=${msg}`;
+        window.open(url,'_blank');
+        alert('Siparişin WhatsApp'a aktarıldı!');
+        closeCheckout();
+      }
+    }
+
+    function openPaymentPage(){
+      // IBAN sayfası doldur
+      $('#ibanName').textContent = SELLER_IBAN_NAME;
+      $('#ibanText').textContent = SELLER_IBAN;
+      $('#bankName').textContent = SELLER_BANK;
+      $('#orderCodeSpan').textContent = lastOrder.code;
+      $('#orderSummary').innerHTML = lastOrder.items.map(i=>`<div>${i.title} (${i.code}) × ${i.qty} = ${fmt(i.price*i.qty)}</div>`).join('');
+      $('#orderTotal').textContent = fmt(lastOrder.total);
+
+      $('#paymentPage').classList.remove('hidden');
+      $('#checkoutView').classList.add('hidden');
+      location.hash = '#odeme';
+    }
+
+    $('#closePayment').onclick = ()=>{ $('#paymentPage').classList.add('hidden'); location.hash=''; };
+    $('#copyIban').onclick = ()=>{ navigator.clipboard.writeText(SELLER_IBAN); alert('IBAN kopyalandı'); };
+
+    // === YORUMLAR ===
+    function openReviews(code){
+      const list = reviews[code] || [];
+      let content = list.map(r=>`- ${r.text}${r.reply?"\n  ↳ Admin: "+r.reply:""}`).join('\n');
+      if(!content) content = 'Henüz yorum yok.';
+      // Sadece sipariş verilen ürünlere yorum izni
+      if(purchased.includes(code)){
+        const newText = prompt('Yorumunu yaz (boş bırakırsan yorum eklenmez):');
+        if(newText){ if(!reviews[code]) reviews[code]=[]; reviews[code].push({text:newText}); saveAll(); alert('Yorum kaydedildi!'); }
+      }
+      alert('Yorumlar:\n' + content + (purchased.includes(code)?'\n\n(Satın aldığın için yorum ekleyebilirsin)':'\n\n(Yorum eklemek için önce satın almalısın)'));
+    }
+
+    // === ADMIN ===
+    function toggleLogin(show){ $('#adminLogin').classList[show?'remove':'add']('hidden'); $('#adminLogin').classList[show?'add':'remove']('flex'); }
+    $('#adminBtn').onclick = ()=> toggleLogin(true);
+    $('#loginBtn').onclick = ()=>{
+      const email = $('#adminEmail').value; const pass = $('#adminPass').value;
+      if(email===AUTH_EMAIL && pass===AUTH_PASS){ loggedIn=true; toggleLogin(false); openPanel(); } else alert('Hatalı giriş!');
+    };
+    function openPanel(){ $('#adminPanel').classList.remove('hidden'); renderAdminProducts(); renderAdminReviews(); }
+    function logout(){ loggedIn=false; $('#adminPanel').classList.add('hidden'); }
+
+    // Ürün ekleme
+    $('#addProductForm').onsubmit = e=>{
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(e.target).entries());
+      data.price = Number(data.price); data.discount = Number(data.discount); data.stock = Number(data.stock);
+      products.push(data); saveAll(); renderProducts(); renderAdminProducts(); e.target.reset();
+    };
+
+    function renderAdminProducts(){
+      $('#adminProducts').innerHTML = products.map((p,i)=>`
+        <div class='border p-3 rounded flex justify-between items-center'>
+          <div><strong>${p.title}</strong> (${p.code}) — ${fmt(p.discount)} | Stok: ${p.stock||0}</div>
+          <div class='flex gap-2'>
+            <button onclick="editStock(${i})" class='px-2 py-1 border rounded'>Stok</button>
+            <button onclick="deleteProduct(${i})" class='text-red-600 px-2 py-1 border rounded'>Sil</button>
+          </div>
+        </div>`).join('');
+    }
+    window.editStock = (i)=>{ const ns = prompt('Yeni stok:', products[i].stock||0); if(ns!==null){ products[i].stock=Number(ns); saveAll(); renderProducts(); renderAdminProducts(); } };
+    window.deleteProduct = (i)=>{ if(!confirm('Silinsin mi?')) return; const code=products[i].code; products.splice(i,1); saveAll(); renderProducts(); renderAdminProducts(); purchased=purchased.filter(c=>c!==code); saveAll(); };
+
+    function renderAdminReviews(){
+      let html='';
+      for(const code in reviews){
+        reviews[code].forEach((r,idx)=>{
+          html+=`<div class='border p-3 rounded'>
+            <div><strong>${code}</strong>: ${r.text}</div>
+            <div class='mt-2'>Cevap: ${r.reply||'-'}</div>
+            <input id='reply-${code}-${idx}' placeholder='Cevap yaz' class='border p-1 rounded w-full mt-2'>
+            <button onclick="saveReply('${code}',${idx})" class='mt-1 px-2 py-1 bg-slate-800 text-white rounded'>Kaydet</button>
+          </div>`;
+        });
+      }
+      $('#adminReviews').innerHTML = html || '<p>Henüz yorum yok.</p>';
+    }
+    window.saveReply = (code,idx)=>{ const inp = document.getElementById(`reply-${code}-${idx}`); if(!inp.value) return; reviews[code][idx].reply = inp.value; saveAll(); renderAdminReviews(); alert('Cevap kaydedildi'); };
+
+    // İlk render
+    renderProducts();
+  </script>
+</body>
+</html>
